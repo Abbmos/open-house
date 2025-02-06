@@ -78,8 +78,9 @@ res.redirect('/listings')
 }
 const edit = async (req,res) => {
 try{
-    if(listing.owner.equals(req.params.userId)){
     const listing =await  Listing.findById(req.params.listingId).populate('owner')
+
+    if(listing.owner.equals(req.params.userId)){
     res.render('listings/edit.ejs',{
 title:`Editing ${listing.streetAddress}`,
 listing,
@@ -98,7 +99,7 @@ res.redirect('/')
 }
 const update = async (req,res) => {
 try {
-if(listing.owner.equals(req.params.userId)){} else {res.send('You dont have permission to do that')}
+
 
 
     const listing = await Listing.findByIdAndUpdate(
