@@ -33,7 +33,19 @@ owner: {
 type: mongoose.Schema.Types.ObjectId,
 ref:"User",
 
+},
+favouritedByUsers:[
+{
+    type: mongoose.Schema.Types.ObjectId,
+    ref:"User",
+    
+
 }
+
+
+]
+
+
 }, {timestamps: true});
 
 const Listing = mongoose.model('Listing',listingSchema)
