@@ -38,22 +38,22 @@ try{
 
 }
 
-const show = async (req,res) => {
-try {
- currentListing = await Listing.findById(req.params.listingId).populate('owner');
-res.render('listings/show.ejs',{
+const show = async (req, res) => {
+    try {
+        const listing = await Listing.findById(req.params.listingId).populate('owner')
+        
+        const userHasFavourited = listing.favouritedByUsers.some((user) => user.equals(req.session.user._id))
 
-    title:currentListing.streetAddress,
-    listing:currentListing,
-})
-
-}
-catch(err) {
-console.log(err);
-
-res.redirect('/')
-}
-
+        res.render('listings/show.ejs', {
+            title: listing.streetAddress,
+            listing,
+            userHasFavourited
+        })
+        
+    } catch (error) {
+        console.log(error)
+        res.redirect('/')
+    }
 }
 const deleteListing = async (req,res) => {
 try {
@@ -118,6 +118,35 @@ res.redirect('/')
 
 
 }
+const addFavourtie = async (req,res) => {
+try{
+const listing= await Listing.findByIdAndUpdate(req.params.listingId, 
+    
+    {$push:{favouritedByUsers: req.params.userId}})
+
+}catch(err) {
+console.log(err);
+res.redirect("/")
+}
+
+
+}
+const removeFavourite = async (req,res) => {
+    try{
+        const listing= await Listing.findByIdAndUpdate(req.params.listingId, 
+            
+            {$pull:{favouritedByUsers: req.params.userId}})
+        
+        }catch(err) {
+        console.log(err);
+        res.redirect("/")
+        }
+        
+
+
+
+}
+
 module.exports = {
     index,
 newListing,
@@ -126,5 +155,7 @@ show,
 deleteListing,
 edit,
 update,
+addFavourtie,
+removeFavourite
 }
 
